@@ -1,22 +1,24 @@
-# create-svelte
+# VoxLoop
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+VoxLoop is an open-source feedback and collaboration platform designed for B2B interactions. It aims to provide businesses and organizations with a seamless way to gather, organize, and prioritize feedback from their clients, partners, and stakeholders.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+TBD
+
+## Getting Started
+
+To get started with VoxLoop, follow these steps:
+
+1. **Installation:** Clone this repository to your local machine.
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+git clone https://github.com/jfdelarosa/voxloop.git
 ```
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've cloned the project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
 npm run dev
