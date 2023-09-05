@@ -13,6 +13,7 @@ generator client {
 }
 
 /// @@allow('create', true)
+/// @@allow('read', true)
 /// @@allow('all', auth() == this)
 model User {
     id String @id() @default(cuid())
@@ -21,10 +22,87 @@ model User {
     emailVerified DateTime?
     /// @password
     /// @omit
-    password String
+    password String?
     name String?
     /// @url
     image String?
+    account Account?
+    posts Post[]
+    comments Comment[]
+    votes Vote[]
+
+    zenstack_guard Boolean @default(true)
+    zenstack_transaction String?
+
+    @@index([zenstack_transaction])
+}
+
+/// @@allow('all', true)
+model Account {
+    id String @id() @default(cuid())
+    type String
+    provider String
+    providerAccountId String
+    token_type String?
+    refresh_token String?
+    access_token String?
+    id_token String?
+    scope String?
+    session_state String?
+    expires_at Int?
+    user User @relation(fields: [userId], references: [id])
+    userId String @unique()
+
+    zenstack_guard Boolean @default(true)
+    zenstack_transaction String?
+
+    @@index([zenstack_transaction])
+    @@unique([provider, providerAccountId])
+}
+
+/// @@allow('read', published)
+/// @@allow('all', author == auth())
+model Post {
+    id String @id() @default(cuid())
+    title String
+    content String?
+    published Boolean @default(false)
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
+    comments Comment[]
+    votes Vote[]
+
+    zenstack_guard Boolean @default(true)
+    zenstack_transaction String?
+
+    @@index([zenstack_transaction])
+}
+
+/// @@allow('read', true)
+/// @@allow('all', user == auth())
+model Vote {
+    id String @id() @default(cuid())
+    post Post @relation(fields: [postId], references: [id])
+    postId String
+    user User @relation(fields: [userId], references: [id])
+    userId String
+
+    zenstack_guard Boolean @default(true)
+    zenstack_transaction String?
+
+    @@index([zenstack_transaction])
+}
+
+/// @@allow('read', published)
+/// @@allow('all', author == auth())
+model Comment {
+    id String @id() @default(cuid())
+    content String
+    published Boolean @default(false)
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
+    post Post @relation(fields: [postId], references: [id])
+    postId String
 
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?

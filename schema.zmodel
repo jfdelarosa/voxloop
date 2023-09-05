@@ -14,17 +14,105 @@ generator client {
     provider = "prisma-client-js"
 }
 
+plugin trpc {
+    provider = '@zenstackhq/trpc'
+    output = 'src/server/routers/generated'
+}
+
+
 model User {
     id String @id @default(cuid())
     email String @unique @email
     emailVerified DateTime?
-    password String @password @omit
+    password String? @password @omit
     name String?
     image String? @url
+
+    account Account?
+    posts Post[]
+    comments Comment[]
+    votes Vote[]
 
     // open to signup
     @@allow('create', true)
 
+    // Anyone can read
+    @@allow('read', true)
+
     // full access by oneself
     @@allow('all', auth() == this)
+}
+
+model Account {
+    id String @id @default(cuid())
+    type String
+    provider String
+    providerAccountId String
+    token_type String?
+    refresh_token String?
+    access_token String?
+    id_token String?
+    scope String?
+    session_state String?
+    expires_at Int?
+
+    user User @relation(fields: [userId], references: [id])
+    userId String @unique
+
+    @@unique([provider, providerAccountId])
+
+    @@allow('all', true)
+}
+
+model Post {
+    id String @id @default(cuid())
+    title String
+    content String?
+    published Boolean @default(false)
+
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
+
+    comments Comment[]
+    votes Vote[]
+
+    // Anyone can read
+    @@allow('read', published)
+
+    // full access by author
+    @@allow('all', author == auth())
+}
+
+model Vote {
+    id String @id @default(cuid())
+
+    post Post @relation(fields: [postId], references: [id])
+    postId String
+
+    user User @relation(fields: [userId], references: [id])
+    userId String
+
+    // Anyone can read
+    @@allow('read', true)
+
+    // full access by user
+    @@allow('all', user == auth())
+}
+
+model Comment {
+    id String @id @default(cuid())
+    content String
+    published Boolean @default(false)
+
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
+
+    post Post @relation(fields: [postId], references: [id])
+    postId String
+
+    // Anyone can read
+    @@allow('read', published)
+
+    // full access by author
+    @@allow('all', author == auth())
 }
