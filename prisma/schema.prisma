@@ -26,7 +26,8 @@ model User {
     name String?
     /// @url
     image String?
-    account Account?
+    account Account[]
+    session Session[]
     posts Post[]
     comments Comment[]
     votes Vote[]
@@ -51,7 +52,7 @@ model Account {
     session_state String?
     expires_at Int?
     user User @relation(fields: [userId], references: [id])
-    userId String @unique()
+    userId String
 
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?
@@ -60,6 +61,29 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
+/// @@allow('all', true)
+model Session {
+    id String @id() @default(cuid())
+    sessionToken String @unique()
+    expires DateTime
+    user User @relation(fields: [userId], references: [id])
+    userId String
+
+    zenstack_guard Boolean @default(true)
+    zenstack_transaction String?
+
+    @@index([zenstack_transaction])
+}
+
+/// @@allow('all', true)
+model VerificationToken {
+    identifier String
+    token String @unique()
+    expires DateTime
+    @@unique([identifier, token])
+}
+
+/// @@allow('create', true)
 /// @@allow('read', published)
 /// @@allow('all', author == auth())
 model Post {
@@ -78,6 +102,7 @@ model Post {
     @@index([zenstack_transaction])
 }
 
+/// @@allow('create', true)
 /// @@allow('read', true)
 /// @@allow('all', user == auth())
 model Vote {
@@ -93,6 +118,7 @@ model Vote {
     @@index([zenstack_transaction])
 }
 
+/// @@allow('create', true)
 /// @@allow('read', published)
 /// @@allow('all', author == auth())
 model Comment {

@@ -28,7 +28,8 @@ model User {
     name String?
     image String? @url
 
-    account Account?
+    account Account[]
+    session Session[]
     posts Post[]
     comments Comment[]
     votes Vote[]
@@ -57,9 +58,30 @@ model Account {
     expires_at Int?
 
     user User @relation(fields: [userId], references: [id])
-    userId String @unique
+    userId String
 
     @@unique([provider, providerAccountId])
+
+    @@allow('all', true)
+}
+
+model Session {
+    id String @id @default(cuid())
+    sessionToken String @unique
+    expires DateTime
+
+    user User @relation(fields: [userId], references: [id])
+    userId String
+
+    @@allow('all', true)
+}
+
+model VerificationToken {
+    identifier String
+    token String @unique
+    expires DateTime
+
+    @@unique([identifier, token])
 
     @@allow('all', true)
 }
@@ -76,6 +98,9 @@ model Post {
     comments Comment[]
     votes Vote[]
 
+    // Anyone can create
+    @@allow('create', true)
+
     // Anyone can read
     @@allow('read', published)
 
@@ -91,6 +116,9 @@ model Vote {
 
     user User @relation(fields: [userId], references: [id])
     userId String
+
+    // Anyone can create
+    @@allow('create', true)
 
     // Anyone can read
     @@allow('read', true)
@@ -110,6 +138,9 @@ model Comment {
     post Post @relation(fields: [postId], references: [id])
     postId String
 
+    // Anyone can create
+    @@allow('create', true)
+    
     // Anyone can read
     @@allow('read', published)
 
