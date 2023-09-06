@@ -9,6 +9,9 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 		interface Locals {
+			session: {
+				user: User | null;
+			};
 			userId: string | null;
 			db: PrismaClient;
 		}

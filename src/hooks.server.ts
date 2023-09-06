@@ -1,18 +1,22 @@
+import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { SvelteKitAuth } from '@auth/sveltekit';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import Google from '@auth/core/providers/google';
-import prisma, { getEnhancedPrisma } from '$lib/prisma';
+import prisma from '$lib/prisma';
 import { AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '$env/static/private';
 
-async function authorization({ event, resolve }) {
-	const session = await event.locals.getSession();
+const sessionHandle: Handle = async ({ event, resolve }) => {
+	if (!event.locals.session?.user?.id) {
+		event.locals.session = await event.locals.getSession();
+	}
 
-	event.locals.userId = session?.user?.id;
-	event.locals.db = getEnhancedPrisma(session?.user?.id);
+	if (!event.locals.db) {
+		event.locals.db = prisma;
+	}
 
 	return resolve(event);
-}
+};
 
 const authHandle = SvelteKitAuth({
 	trustHost: true,
@@ -54,4 +58,4 @@ const authHandle = SvelteKitAuth({
 	}
 });
 
-export const handle = sequence(authHandle, authorization);
+export const handle = sequence(authHandle, sessionHandle);
