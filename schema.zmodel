@@ -14,9 +14,13 @@ generator client {
     provider = "prisma-client-js"
 }
 
+plugin zod {
+    provider = '@core/zod'
+}
+
 plugin trpc {
     provider = '@zenstackhq/trpc'
-    output = 'src/server/routers/generated'
+    output = 'src/server/generated'
 }
 
 

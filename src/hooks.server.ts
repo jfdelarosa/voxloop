@@ -4,6 +4,11 @@ import { SvelteKitAuth } from '@auth/sveltekit';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import Google from '@auth/core/providers/google';
 import prisma from '$lib/prisma';
+
+import { createContext } from '$lib/trpc/context';
+import { router } from '$lib/trpc/router';
+import { createTRPCHandle } from 'trpc-sveltekit';
+
 import { AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '$env/static/private';
 
 const sessionHandle: Handle = async ({ event, resolve }) => {
@@ -58,4 +63,6 @@ const authHandle = SvelteKitAuth({
 	}
 });
 
-export const handle = sequence(authHandle, sessionHandle);
+const tRPCHandle: Handle = createTRPCHandle({ router, createContext });
+
+export const handle = sequence(authHandle, sessionHandle, tRPCHandle);

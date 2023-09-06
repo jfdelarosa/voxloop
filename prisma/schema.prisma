@@ -31,11 +31,6 @@ model User {
     posts Post[]
     comments Comment[]
     votes Vote[]
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 /// @@allow('all', true)
@@ -54,10 +49,6 @@ model Account {
     user User @relation(fields: [userId], references: [id])
     userId String
 
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
     @@unique([provider, providerAccountId])
 }
 
@@ -68,11 +59,6 @@ model Session {
     expires DateTime
     user User @relation(fields: [userId], references: [id])
     userId String
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 /// @@allow('all', true)
@@ -80,6 +66,7 @@ model VerificationToken {
     identifier String
     token String @unique()
     expires DateTime
+
     @@unique([identifier, token])
 }
 
@@ -95,11 +82,6 @@ model Post {
     authorId String
     comments Comment[]
     votes Vote[]
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 /// @@allow('create', true)
@@ -111,11 +93,6 @@ model Vote {
     postId String
     user User @relation(fields: [userId], references: [id])
     userId String
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
 
 /// @@allow('create', true)
@@ -129,9 +106,4 @@ model Comment {
     authorId String
     post Post @relation(fields: [postId], references: [id])
     postId String
-
-    zenstack_guard Boolean @default(true)
-    zenstack_transaction String?
-
-    @@index([zenstack_transaction])
 }
