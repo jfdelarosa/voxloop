@@ -3,10 +3,6 @@ import { fail } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ request, locals }) => {
-		if (!locals.userId) {
-			return;
-		}
-
 		const data = await request.formData();
 		const title = data.get('title') as string;
 		const content = data.get('content') as string;
@@ -31,7 +27,7 @@ export const actions = {
 					published: true,
 					author: {
 						connect: {
-							id: locals.userId
+							id: locals.session.user?.id
 						}
 					}
 				}

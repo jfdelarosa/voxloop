@@ -4,6 +4,10 @@
 	import Post from '$lib/components/preview/preview.svelte';
 
 	export let data: PageData;
+
+	async function vote({ detail }: { detail: { id: string } }) {
+		console.log(detail);
+	}
 </script>
 
 <div class="flex gap-12">
@@ -19,7 +23,7 @@
 				<p>No posts found.</p>
 			{:else}
 				{#each posts as post}
-					<Post {post} />
+					<Post {post} on:vote={vote} />
 				{/each}
 			{/if}
 		{/await}

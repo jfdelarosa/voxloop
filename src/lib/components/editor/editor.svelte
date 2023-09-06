@@ -1,12 +1,15 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { Button } from '$lib/components/ui/button';
+	import { showLoginDialog } from '$lib/stores/app';
+	import { session } from '$lib/stores/user';
 </script>
 
-<form method="post">
+<form method="post" use:enhance>
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>Create New Feedback</Card.Title>
@@ -27,7 +30,18 @@
 			</div>
 		</Card.Content>
 		<Card.Footer>
-			<Button type="submit">Send Feedback</Button>
+			{#if $session}
+				<Button type="submit">Send Feedback</Button>
+			{:else}
+				<Button
+					type="button"
+					on:click={() => {
+						$showLoginDialog = true;
+					}}
+				>
+					Send Feedback
+				</Button>
+			{/if}
 		</Card.Footer>
 	</Card.Root>
 </form>

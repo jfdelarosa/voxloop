@@ -1,12 +1,6 @@
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = ({ locals, params }) => {
-	console.log(locals);
-
-	if (!locals.db) {
-		return {};
-	}
-
 	return {
 		streamed: {
 			post: locals.db.post.findUnique({
