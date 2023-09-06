@@ -7,9 +7,21 @@
 	import { Button } from '$lib/components/ui/button';
 	import { showLoginDialog } from '$lib/stores/app';
 	import { session } from '$lib/stores/user';
+
+	let loading: boolean = false;
 </script>
 
-<form method="post" use:enhance>
+<form
+	method="post"
+	use:enhance={() => {
+		loading = true;
+
+		return async ({ update }) => {
+			loading = false;
+			update();
+		};
+	}}
+>
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>Create New Feedback</Card.Title>
@@ -31,7 +43,7 @@
 		</Card.Content>
 		<Card.Footer>
 			{#if $session}
-				<Button type="submit">Send Feedback</Button>
+				<Button {loading} type="submit">Send Feedback</Button>
 			{:else}
 				<Button
 					type="button"
