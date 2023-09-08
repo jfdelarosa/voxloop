@@ -19,8 +19,19 @@ plugin trpc {
     output = 'src/server/routers/generated'
 }
 
+plugin zod {
+    provider = '@core/zod'
+}
 
-model User {
+
+abstract model Base {
+    createdAt DateTime @default(now())
+    updatedAt DateTime? @updatedAt()
+    publishedAt DateTime? @default(now())
+    published Boolean @default(false)
+}
+
+model User extends Base {
     id String @id @default(cuid())
     email String @unique @email
     emailVerified DateTime?
@@ -86,11 +97,10 @@ model VerificationToken {
     @@allow('all', true)
 }
 
-model Post {
+model Post extends Base {
     id String @id @default(cuid())
     title String
     content String?
-    published Boolean @default(false)
 
     author User @relation(fields: [authorId], references: [id])
     authorId String
@@ -108,7 +118,7 @@ model Post {
     @@allow('all', author == auth())
 }
 
-model Vote {
+model Vote extends Base {
     id String @id @default(cuid())
 
     post Post @relation(fields: [postId], references: [id])
@@ -127,10 +137,9 @@ model Vote {
     @@allow('all', user == auth())
 }
 
-model Comment {
+model Comment extends Base {
     id String @id @default(cuid())
     content String
-    published Boolean @default(false)
 
     author User @relation(fields: [authorId], references: [id])
     authorId String
