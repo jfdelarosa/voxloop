@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
-	import type { CommentCreateSchema } from '@zenstackhq/runtime/zod/models';
+	import type dbModels from '@zenstackhq/runtime/zod/models';
 	import type { Prisma } from '@prisma/client';
 	import Comment from '$lib/components/partials/comments/comment.svelte';
 	import CommentsForm from '$lib/components/partials/comments/comments-form.svelte';
 
-	export let form: SuperValidated<typeof CommentCreateSchema>;
+	export let form: SuperValidated<typeof dbModels.CommentCreateSchema>;
 	export let comments: Prisma.CommentGetPayload<{
 		include: {
 			author: true;

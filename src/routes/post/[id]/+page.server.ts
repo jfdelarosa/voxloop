@@ -2,11 +2,11 @@ import type { Actions, PageServerLoad } from './$types';
 import { fail } from '@sveltejs/kit';
 
 import { superValidate, setError } from 'sveltekit-superforms/server';
-import { CommentCreateSchema } from '@zenstackhq/runtime/zod/models';
+import dbModels from '@zenstackhq/runtime/zod/models';
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event, CommentCreateSchema);
+		const form = await superValidate(event, dbModels.CommentCreateSchema);
 
 		if (!form.data.content) {
 			return setError(form, 'content', 'The comment cannot be empty');
@@ -43,7 +43,7 @@ export const actions: Actions = {
 
 export const load: PageServerLoad = ({ locals, params }) => {
 	return {
-		form: superValidate(CommentCreateSchema),
+		form: superValidate(dbModels.CommentCreateSchema),
 		streamed: {
 			post: locals.db.post.findUnique({
 				include: {
