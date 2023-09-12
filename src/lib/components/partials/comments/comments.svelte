@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SuperValidated } from 'sveltekit-superforms';
+	import type dbModels from '@zenstackhq/runtime/zod/models';
 	import type { Prisma } from '@prisma/client';
-	import dbModels from '@zenstackhq/runtime/zod/models';
 	import Comment from '$lib/components/partials/comments/comment.svelte';
 	import CommentsForm from '$lib/components/partials/comments/comments-form.svelte';
 
