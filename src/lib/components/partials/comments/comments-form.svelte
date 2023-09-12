@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type { SuperValidated } from 'sveltekit-superforms';
-	import { CommentCreateSchema } from '@zenstackhq/runtime/zod/models';
+	import * as dbModels from '@zenstackhq/runtime/zod/models';
 	import * as Form from '$lib/components/ui/form';
-	export let form: SuperValidated<typeof CommentCreateSchema>;
+	export let form: any;
 </script>
 
-<Form.Root {form} schema={CommentCreateSchema} let:config let:enhance asChild>
+<Form.Root {form} schema={dbModels?.CommentCreateSchema} let:config let:enhance asChild>
 	<form method="POST" use:enhance>
 		<Form.Field {config} name="content">
 			<Form.Item>
